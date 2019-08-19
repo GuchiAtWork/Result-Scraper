@@ -1,0 +1,13 @@
+Plans for this piece of shit:
+
+1. Create a checker that scrapes important information from the Unimelb results page and determines if any new scores are updated
+
+	1.1. Able to distinct between new students or old students for purposes of extracting specific data (e.g. WAM for new students may not exist so my application has to anticipate this scenario)
+
+	1.2. Application is able to scrape info at a certain period without user actively employing application
+
+2. Warns user that score has been updated, either via phone message or e-mail
+
+3. Create a GUI that is able to extract meaningful data (e.g. Unimelb username and pass, phone number or email to send data to)
+
+4. Make setup for this application as easy as possible
