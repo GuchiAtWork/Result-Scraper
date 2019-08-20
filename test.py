@@ -1,4 +1,5 @@
 import requests
+import check
 from bs4 import BeautifulSoup
 
 headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36"}
@@ -20,7 +21,7 @@ login_data["__EVENTVALIDATION"] = soup.find('input', attrs = {'name': '__EVENTVA
 
 response = requests.post(URL, data = login_data, headers = headers)
 soup = BeautifulSoup(response.content, 'html5lib')
-wam_statement = float(soup.find('div', attrs = {'class': 'UMWAMText'}).b.text)
+wam = float(soup.find('div', attrs = {'class': 'UMWAMText'}).b.text)
 result_table = soup.find('table', attrs = {'id': 'ctl00_Content_grdResultDetails'})
 results = result_table.find_all('tr')
 results.pop(0)
@@ -28,13 +29,14 @@ results.pop(0)
 subjects = 0
 totalScore = 0
 NORMALCREDIT = 12.5
+ACCEPTABLEGRADES = ("H1", "H2A", "H2B", "H3", "P", "N", "NH")
 
 for result in results:
 	subject_detail = result.find_all('td')
-	creditPoints = float(subject_detail[8].text)
-	creditCheck = int(creditPoints // NORMALCREDIT)
-	score = int(subject_detail[5].text) * creditCheck
-	subjects += creditCheck
-	totalScore += score
+	if subject_detail[6].text in ACCEPTABLEGRADES:
+		creditPoints = float(subject_detail[8].text)
+		creditCheck = int(creditPoints / NORMALCREDIT)
+		score = int(subject_detail[5].text) * creditCheck
+		subjects += creditCheck
+		totalScore += score
 
-print(round(totalScore/subjects, 3))
