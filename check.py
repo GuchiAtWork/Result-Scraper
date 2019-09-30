@@ -8,7 +8,7 @@ MINSCORE = 0
 def find_marks_subjs(wam, totalScore, totalSubjs):
 	highestScore = 99
 
-	# On the basis that a person takes between 1 to 6 subjects
+	# On the basis that a person takes between 1 to 6 subjects in current term
 	for subjsTaken in range(1, 7):
 		estimatedScore = (wam * (totalSubjs + subjsTaken) - totalScore)
 		if (MINSCORE <= estimatedScore <= highestScore):
