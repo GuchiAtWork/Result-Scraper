@@ -10,7 +10,7 @@ These are a list of components I wish to add to the program:
 1. web scrape the results using a requests library (DONE)
 2. implement a function to calculate the missing grade if WAM has been updated (DONE)
 3. implement a scheduler
-4. web scrape dates of different semesters 
+4. web scrape dates of different semesters (DONE)
 5. implement a function to change scheduler settings when current date is not between exam date and results arrival
    (10 minutes when between, 1 day when not)
 6. find a way to somehow send results of program to users via email 
