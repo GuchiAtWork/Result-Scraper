@@ -76,5 +76,4 @@ def scrapeDates():
 				break
 
 	TTA = [convertDateType(dates, currentYear) for dates in TTAs]
-	print(TTA)
 
