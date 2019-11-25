@@ -52,6 +52,7 @@ def access_page():
 	ACCEPTABLEGRADES = ("H1", "H2A", "H2B", "H3", "P", "N", "NH")
 
 	for result in results:
+		# Removing unnecessary details (extra spaces, leaving only relevant data)
 		subject_detail = result.find_all('td')
 		if subject_detail[6].text in ACCEPTABLEGRADES:
 			creditPoints = float(subject_detail[8].text)
@@ -64,7 +65,6 @@ def access_page():
 			totalScore += score
 
 	calcWam = round(totalScore / subjects, 3)
-	print(find_marks_subjs(foundWam, totalScore, subjects))
 
 """ Function intends to find the number of subjects released and its corresponding marks once WAM is updated """
 def find_marks_subjs(wam, totalScore, totalSubjs):
@@ -83,6 +83,10 @@ def find_marks_subjs(wam, totalScore, totalSubjs):
 			if math.isclose(estimatedScore, int(estimatedScore), rel_tol = MIN_DIF):
 				return (int(estimatedScore), subjsTaken)
 		highestScore += 100
+	return None
+
+def verifyAccount():
+
 	return None
 
 def main():

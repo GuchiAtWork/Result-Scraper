@@ -9,10 +9,16 @@ These are a list of components I wish to add to the program:
 
 1. web scrape the results using a requests library (DONE)
 2. implement a function to calculate the missing grade if WAM has been updated (DONE)
-3. implement a scheduler
+3. implement a scheduler (DONE)
 4. web scrape dates of different semesters (DONE)
-5. implement a function to change scheduler settings when current date is not between exam date and results arrival
-   (10 minutes when between, 1 day when not)
-6. find a way to somehow send results of program to users via email 
-7. Implement a GUI for easier user experience
-8. To let program handle downloading of modules used in program for easier user experience
+5. find a way to somehow send results of program to users via email 
+6. Implement a GUI for easier user experience
+7. To let program handle downloading of modules used in program for easier user experience
+
+As of 25/11/2019:
+	I need to compartmentalize the access_page func in checkwam.py into smaller functions (too long).
+	Also need to integrate all other modules so checker can actually be implemented.
+	I've also decided to remove the scheduler's ability to run at different intervals dependent on date
+	   --- partly due to the fact that the schedule module I've downloaded can't seem to account for this
+	    
+

@@ -5,13 +5,14 @@ import schedule
 import time	
 import email_send
 
-# Executes email task every 30 seconds
-schedule.every(30).seconds.do(email_send.email, "@gmail.com", "Testing", "Success")
 
-# A while loop needed to keep task running
-while True:
+def autoSend(mailAddr, header, content):
+	# Executes email task every 30 seconds
+	schedule.every(10).minutes.do(email_send.email, mailAddr, header, content)
 
-	# Checks whether a task is scheduled to run 
-	schedule.run_pending()
-	
-	time.sleep(1)
+	# A while loop needed to keep task running
+	while True:
+
+		# Checks whether a task is scheduled to run 
+		schedule.run_pending()
+		
