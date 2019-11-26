@@ -1,18 +1,23 @@
 import requests
 from bs4 import BeautifulSoup
 import math
+import pickle
 
 """ Function intends to webscrape results from UniMelb results page and process data from it """
-def access_page():
+def check():
 
 	# GET request used to retrieve data for form data, which is used to login results page
-	headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36"}
+	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'}
 	URL = "https://prod.ss.unimelb.edu.au/student/login.aspx?ReturnUrl=%2fstudent%2fSM%2fResultsDtls10.aspx%3fr%3d%2523UM.STUDENT.APPLICANT%26f%3d%2524S1.EST.RSLTDTLS.WEB&r=%23UM.STUDENT.APPLICANT&f=%24S1.EST.RSLTDTLS.WEB" 
 	response = requests.get(URL, headers = headers)
 	soup = BeautifulSoup(response.content, 'html5lib')
 
-	username = input("Enter Unimelb Username: ")
-	password = input("Enter Unimelb Password: ")
+	# Retrieving username and password from pickle file
+	with open('usercreds', 'rb') as getuser:
+		username = pickle.load(getuser)
+
+	with open('passcreds', 'rb') as getpass:
+		password = pickle.load(getpass)
 
 	# form data needed to log in to results page
 	login_data = {
@@ -26,16 +31,6 @@ def access_page():
 	login_data["__EVENTVALIDATION"] = soup.find('input', attrs = {'name': '__EVENTVALIDATION'})['value']
 
 	response = requests.post(URL, data = login_data, headers = headers)
-
-	""" Tracks redirection status of response object (if correct login provided, will redirect,
-        whilst wrong data won't) and if not redirected, will ask for login details again"""
-	while not response.history:
-		print("Incorrect username or password.")
-		username = input("Enter Unimelb Username: ")
-		password = input("Enter Unimelb Password: ")
-		login_data["ctl00$Content$txtUserName$txtText"] = username
-		login_data["ctl00$Content$txtPassword$txtText"] = password
-		response = requests.post(URL, data = login_data, headers = headers)
 
 	soup = BeautifulSoup(response.content, 'html5lib')
 
@@ -64,7 +59,10 @@ def access_page():
 			subjects += creditCheck
 			totalScore += score
 
+	# Rounding to three decimal places is done for comparison between found and calculated WAM
 	calcWam = round(totalScore / subjects, 3)
+
+	return (foundWam, calcWam, totalScore, subjects)
 
 """ Function intends to find the number of subjects released and its corresponding marks once WAM is updated """
 def find_marks_subjs(wam, totalScore, totalSubjs):
@@ -85,12 +83,49 @@ def find_marks_subjs(wam, totalScore, totalSubjs):
 		highestScore += 100
 	return None
 
-def verifyAccount():
+def getAccount():
+	username = input("Enter Unimelb Username: ")
+	password = input("Enter Unimelb Password: ")
 
-	return None
+	headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36"}
+	URL = "https://prod.ss.unimelb.edu.au/student/login.aspx?ReturnUrl=%2fstudent%2fSM%2fResultsDtls10.aspx%3fr%3d%2523UM.STUDENT.APPLICANT%26f%3d%2524S1.EST.RSLTDTLS.WEB&r=%23UM.STUDENT.APPLICANT&f=%24S1.EST.RSLTDTLS.WEB" 
+	response = requests.get(URL, headers = headers)
+	soup = BeautifulSoup(response.content, 'html5lib')
+
+	# form data needed to log in to results page
+	login_data = {
+		'__EVENTTARGET': 'ctl00$Content$cmdLogin',
+		'ctl00$Content$txtUserName$txtText': username,
+		'ctl00$Content$txtPassword$txtText': password
+	}
+	login_data["__EVENTARGUMENT"] = soup.find('input', attrs = {'name': '__EVENTARGUMENT'})['value']
+	login_data["__VIEWSTATE"] = soup.find('input', attrs = {'name': '__VIEWSTATE'})['value']
+	login_data["__VIEWSTATEGENERATOR"] = soup.find('input', attrs = {'name': '__VIEWSTATEGENERATOR'})['value']
+	login_data["__EVENTVALIDATION"] = soup.find('input', attrs = {'name': '__EVENTVALIDATION'})['value']
+
+	response = requests.post(URL, data = login_data, headers = headers)
+
+	""" Tracks redirection status of response object (if correct login provided, will redirect,
+        whilst wrong data won't) and if not redirected, will ask for login details again"""
+	while not response.history:
+		print("Incorrect username or password.")
+		username = input("Enter Unimelb Username: ")
+		password = input("Enter Unimelb Password: ")
+		login_data["ctl00$Content$txtUserName$txtText"] = username
+		login_data["ctl00$Content$txtPassword$txtText"] = password
+		response = requests.post(URL, data = login_data, headers = headers)
+
+	fileuser = 'usercreds'
+	filepass = 'passcreds'
+
+	with open(fileuser, 'wb') as storeuser:
+		pickle.dump(username, storeuser) 
+
+	with open(filepass, 'wb') as storepass:
+		pickle.dump(password, storepass) 
 
 def main():
-	access_page()
+	
 
 if __name__ == '__main__':
 	main()
