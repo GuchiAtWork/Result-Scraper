@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import math
 import pickle
 
+import email_send
+
 """ Function intends to webscrape results from UniMelb results page and process data from it """
 def check():
 
@@ -125,7 +127,22 @@ def getAccount():
 		pickle.dump(password, storepass) 
 
 def main():
-	
+	try:
+		# checking if credentials are stored in current working directory and creating one if not
+		with open('usercreds', 'rb') as getuser:
+			username = pickle.load(getuser)		
+	except IOError as noCreds:
+		getAccount()
+	except:
+		print("An unexpected error has occured")
+	finally:
+		# checking if WAM has been updated and updating users if so
+		results = check()
+		updatedMarks = find_marks_subjs(results[0], results[2], results[3])
+
+		header = "WAM Notification"
+		content = "{} -> {}\n".format(results[1], results[0])
+		content += "Subjects updated:\n{}".format(updatedMarks)
 
 if __name__ == '__main__':
 	main()
