@@ -85,6 +85,7 @@ def find_marks_subjs(wam, totalScore, totalSubjs):
 		highestScore += 100
 	return None
 
+""" Function serves to get user's username and password for the purposes of checking result page """
 def getAccount():
 	username = input("Enter Unimelb Username: ")
 	password = input("Enter Unimelb Password: ")
@@ -133,11 +134,18 @@ def main():
 			username = pickle.load(getuser)		
 	except IOError as noCreds:
 		getAccount()
+
+		with open('pastWAM', 'wb') as storeWAM:
+			pickle.dump(0.000, storeWAM)
 	except:
 		print("An unexpected error has occured")
 	finally:
 		# checking if WAM has been updated and updating users if so
 		results = check()
+
+		""" What should be done here is to compare past and current WAM/dates to 
+			determine whether we should warn user of WAM update """
+
 		updatedMarks = find_marks_subjs(results[0], results[2], results[3])
 
 		header = "WAM Notification"
