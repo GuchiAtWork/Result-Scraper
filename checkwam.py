@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 import math
 import pickle
-
 import email_send
 
 """ Function intends to webscrape results from UniMelb results page and process data from it """
@@ -138,19 +137,42 @@ def main():
 		with open('pastWAM', 'wb') as storeWAM:
 			pickle.dump(0.000, storeWAM)
 	except:
-		print("An unexpected error has occured")
+		print("An unexpected error has occured.")
 	finally:
 		# checking if WAM has been updated and updating users if so
 		results = check()
 
-		""" What should be done here is to compare past and current WAM/dates to 
-			determine whether we should warn user of WAM update """
+		with open('pastWAM', 'rb') as storeWAM:
+			prevWam = pickle.load(storeWAM)
 
-		updatedMarks = find_marks_subjs(results[0], results[2], results[3])
+		if (results[0] != prevWam):
 
-		header = "WAM Notification"
-		content = "{} -> {}\n".format(results[1], results[0])
-		content += "Subjects updated:\n{}".format(updatedMarks)
+			with open('usercreds', 'rb') as getuser:
+				username = pickle.load(getuser)
+
+			updatedMarks = find_marks_subjs(results[0], results[2], results[3])
+
+			header = "WAM Update"
+			content = "Old WAM: {} -> New WAM: {}\n\n".format(results[1], results[0])
+
+			""" if difference between calculated and found WAM is same (only for instances
+				where user is not exactly a new student """
+
+			if (results[0] == results[1]):
+				header: "Testing"
+				content = "No updates. Just a check"
+			else:
+				header = "WAM Update"
+				content = "Old WAM: {} -> New WAM: {}\n\n".format(results[1], results[0])
+				content = "The potential score(s) for {} subject(s): {} marks total".format(
+						   updatedMarks[1], updatedMarks[0])
+
+			email_send.email(username+"@student.unimelb.edu.au", header, content)
+
+			with open('pastWAM', 'wb') as storeWAM:
+				pickle.dump(results[0], storeWAM) 
+		else:
+			print("WAM has not been updated")
 
 if __name__ == '__main__':
 	main()

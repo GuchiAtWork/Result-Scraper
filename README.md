@@ -12,13 +12,9 @@ These are a list of components I wish to add to the program:
 3. implement a scheduler (DONE)
 4. web scrape dates of different semesters (DONE)
 5. find a way to somehow send results of program to users via email (DONE)
-6. Implement a GUI for easier user experience
+6. integrate scheduler and check Wam function 
 7. To let program handle downloading of modules used in program for easier user experience
 
-As of 25/11/2019:
-	I need to compartmentalize the access_page func in checkwam.py into smaller functions (too long).
-	Also need to integrate all other modules so checker can actually be implemented.
-	I've also decided to remove the scheduler's ability to run at different intervals dependent on date
-	   --- partly due to the fact that the schedule module I've downloaded can't seem to account for this
-	    
+As of 6/12/2019:
+	The program works but it's a bloody mess. Should really find a way to optimise this.	    
 
