@@ -45,10 +45,9 @@ These are a list of components I wish to add to the program:
 1. web scrape the results using a requests library (DONE)
 2. implement a function to calculate the missing grade if WAM has been updated (DONE)
 3. implement a scheduler (DONE)
-4. web scrape dates of different semesters (DONE)
-5. find a way to somehow send results of program to users via email (DONE)
-6. integrate scheduler and check Wam function 
-7. To let program handle downloading of modules used in program for easier user experience
-8. Implement GUI for friendlier user experience
+4. find a way to somehow send results of program to users via email (DONE)
+5. integrate scheduler and check Wam function (DONE)
+6. To let program handle downloading of modules used in program for easier user experience
+7. Implement GUI for friendlier user experience
 	    
 
