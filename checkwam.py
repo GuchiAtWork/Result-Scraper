@@ -4,6 +4,9 @@ import math
 import pickle
 import email_send
 
+import schedule
+import time	
+
 """ Function intends to webscrape results from UniMelb results page and process data from it """
 def check():
 
@@ -126,7 +129,7 @@ def getAccount():
 	with open(filepass, 'wb') as storepass:
 		pickle.dump(password, storepass) 
 
-def main():
+def control():
 	try:
 		# checking if credentials are stored in current working directory and creating one if not
 		with open('usercreds', 'rb') as getuser:
@@ -147,13 +150,13 @@ def main():
 
 		if (results[0] != prevWam):
 
+			header = ""
+			content = ""
+
 			with open('usercreds', 'rb') as getuser:
 				username = pickle.load(getuser)
 
 			updatedMarks = find_marks_subjs(results[0], results[2], results[3])
-
-			header = "WAM Update"
-			content = "Old WAM: {} -> New WAM: {}\n\n".format(results[1], results[0])
 
 			""" if difference between calculated and found WAM is same (only for instances
 				where user is not exactly a new student """
@@ -173,6 +176,16 @@ def main():
 				pickle.dump(results[0], storeWAM) 
 		else:
 			print("WAM has not been updated")
+
+def main():
+	# Executes email task every 30 seconds
+	schedule.every(180).seconds.do(control)
+
+	# A while loop needed to keep task running
+	while True:
+
+		# Checks whether a task is scheduled to run 
+		schedule.run_pending()
 
 if __name__ == '__main__':
 	main()
