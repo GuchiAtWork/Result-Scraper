@@ -1,4 +1,9 @@
-WAM CHECKER INITIAL RELEASE
+# WAM CHECKER
+
+The following technologies used:
+- Python
+- Gmail API
+- Beautiful Soup (Python module used for web scraping)
 
 What is this?
 
